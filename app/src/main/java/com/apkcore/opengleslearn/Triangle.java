@@ -10,8 +10,14 @@ import java.nio.FloatBuffer;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+/**
+ * 参考
+ * 感谢大佬
+ * https://wuwang.blog.csdn.net/article/details/52801772
+ */
 public class Triangle implements GLSurfaceView.Renderer {
     private FloatBuffer vertexBuffer;
+    // gl_Position gl_FragColor是shader内置变量，分别为顶点位置与颜色
     private final String vertexShaderCode =
             "attribute vec4 vPosition;" +
                     "void main() {" +
@@ -46,7 +52,7 @@ public class Triangle implements GLSurfaceView.Renderer {
 
     private int mMatrixHandler;
 
-    //设置颜色，依次为红绿蓝和透明通道
+    //设置颜色，依次为红绿蓝和透明通道RGBA
     float color[] = {1.0f, 1.0f, 1.0f, 1.0f};
 
 
@@ -54,8 +60,7 @@ public class Triangle implements GLSurfaceView.Renderer {
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         //将背景设置为灰色
         GLES20.glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
-        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
-        //申请底层空间
+        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
         ByteBuffer bb = ByteBuffer.allocateDirect(
                 triangleCoords.length * 4);
         bb.order(ByteOrder.nativeOrder());
@@ -130,7 +135,7 @@ public class Triangle implements GLSurfaceView.Renderer {
     public void onDrawFrame(GL10 gl) {
         // Redraw background color
         //不加这句背景会一直闪烁
-        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+//        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
         //将程序加入到OpenGLES2.0环境
         GLES20.glUseProgram(mProgram);
 
@@ -148,10 +153,7 @@ public class Triangle implements GLSurfaceView.Renderer {
         GLES20.glUniform4fv(mColorHandle, 1, color, 0);
         //绘制三角形
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount);
-        //禁止顶点数组的句柄
+//        禁止顶点数组的句柄
         GLES20.glDisableVertexAttribArray(mPositionHandle);
-
-        //开始画
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 3);
     }
 }
