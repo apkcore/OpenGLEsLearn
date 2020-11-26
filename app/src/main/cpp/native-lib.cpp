@@ -2,9 +2,9 @@
 #include <string>
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_apkcore_opengleslearn_MainActivity_stringFromJNI(
+Java_com_apkcore_openglesone_MainActivity_stringFromJNI(
         JNIEnv* env,
         jobject /* this */) {
-    std::string hello = "Hello from C++";
+    std::string hello = "Hello from C++！";
     return env->NewStringUTF(hello.c_str());
 }
